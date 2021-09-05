@@ -1,0 +1,17 @@
+name: 'CoCart Build Action'
+author: CoCart
+description: 'Build CoCart using Composer and NPM'
+inputs:
+  generate-zip:
+    description: 'Generate package zip file?'
+    default: false
+outputs:
+  path:
+    description: 'Build path'
+  zip_path:
+    description: 'Zip file path'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.generate-zip }}
