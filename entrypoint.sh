@@ -21,6 +21,7 @@ echo "::set-output name=path::$DEST_PATH"
 
 cd "$GITHUB_WORKSPACE" || exit
 
+if test -f "${GITHUB_WORKSPACE}/composer.json"; then
 echo "➤ Installing dependencies..."
 npm install
 composer install || exit "$?"
@@ -28,6 +29,7 @@ echo "➤ Running build..."
 npm run build || exit "$?"
 echo "➤ Cleaning up dependencies..."
 composer install --no-dev || exit "$?"
+fi
 
 echo "➤ Generating build directory..."
 rm -rf "$BUILD_PATH"
