@@ -7,7 +7,7 @@ inputs:
     default: false
   plugin-slug:
     required: false
-    description: 'Plugin slug. Default's to repository name.'
+    description: 'Plugin slug. Defaults to repository name.'
 outputs:
   path:
     description: 'Build path'
