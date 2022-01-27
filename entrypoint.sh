@@ -13,7 +13,7 @@ fi
 if [ -z "$PLUGIN_SLUG" ]; then
   PLUGIN_SLUG=${GITHUB_REPOSITORY#*/}
 fi
-echo "ℹ︎ Plugin is $PLUGIN_SLUG";
+echo "ℹ︎ Plugin slug is $PLUGIN_SLUG";
 
 # Set GitHub "path" output
 DEST_PATH="$BUILD_PATH/$PLUGIN_SLUG"
@@ -22,13 +22,23 @@ echo "::set-output name=path::$DEST_PATH"
 cd "$GITHUB_WORKSPACE" || exit
 
 if test -f "${GITHUB_WORKSPACE}/composer.json"; then
-echo "➤ Installing dependencies..."
-npm install
-composer install || exit "$?"
-echo "➤ Running build..."
-npm run build || exit "$?"
-echo "➤ Cleaning up dependencies..."
-composer install --no-dev || exit "$?"
+  echo "➤ Installing dependencies..."
+  npm install
+  composer install || exit "$?"
+
+  if [ -z "$BUILD_TYPE" ]; then
+    echo "No build type specified, defaulting to just build a zip."
+  fi
+
+  echo "➤ Running build..."
+  if [ "$BUILD_TYPE" = "ready" ]; then
+    npm run ready || exit "$?"
+  else
+    npm run build || exit "$?"
+  fi
+
+  echo "➤ Cleaning up dependencies..."
+  composer install --no-dev || exit "$?"
 fi
 
 echo "➤ Generating build directory..."
